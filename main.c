@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+/*
 void loginPlace (char login[], char count[], int position[]) {
     //int *position = malloc(12);
 
@@ -17,43 +18,36 @@ void loginPlace (char login[], char count[], int position[]) {
         }
     }
 }
+*/
 
-void nextPlace (char login[], char count[], int lenghtOfLogin, int lenghtOfCount) {
+void nextPlace (char login[], char count[], int place[], int lenghtOfCount) {
     //pomocna promenna -> pokud se predesle cislo rovna 61 (posledni znak)
     //tak aura se bude rovnat 1 -> posune rad v dalsim posunu loginu
     int aura=0;
-    int place[lenghtOfLogin];
 
-    loginPlace(login,count,place);
+    for (int i=11; i>=0; i--) {
 
-    for (int i=0; i<lenghtOfLogin; i++) {
-        //pokud je i rovno 0
-        //hlavni cast -> furt se toci dokola
-        if (i==0) {
-            if (login[i]==count[lenghtOfCount -1]) {
+        if (i==11) {
+            if (login[i]==count[lenghtOfCount-1]) {
                 login[i]=count[0];
+                place[i]=0;
                 aura=1;
 
             } else {
-                login[0]=count[place[0] +1];
+                login[i]=count[place[i] +1];
+                place[i]++;
             }
         }
-            //pokud je i vetsi nez 0
-            //mene dulezita cast
-        else if (i>0) {
-            //pokud je Login na miste i stejny jako
-            //posledni znak v Count na poslednim miste
-            if (login[i]==count[lenghtOfCount -1]) {
+        else if (aura==1) {
+            if (login[i]==count[lenghtOfCount-1]) {
                 login[i]=count[0];
+                place[i]=0;
                 aura=1;
-            }
-                //pokud bylo byl predesly znak v Loginu stejnny jako
-                //posledni znak v Count tak se aura zvetsi o 1
-                //a to je znaeni posunout pristi Login o jedno vic
-            else if (aura==1) {
+
+            } else {
                 login[i]=count[place[i] +1];
-                aura=0;
-            } else {}
+                place[i]++;
+            }
         }
     }
 }
@@ -62,7 +56,7 @@ int main() {
     //abeceda
     char count[63]={'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
                     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-                    '1', '2', '3', '4', '5', '6', '7', '8', '9', '0','/0'};
+                    '1', '2', '3', '4', '5', '6', '7', '8', '9', '0','/0 '};
 
     //umisteni
     int place[12];
@@ -70,17 +64,15 @@ int main() {
 
     for(int e=0; e<13; ++e) {
         login[e]=0;
+        place[e]=0;
     }
-    login[0]='b';
-
+    login[11]='a';
+    place[11]=0;
 
     while(1){
-        nextPlace(login,count,12,63);
-        for (int c=0; c<12; c++) {
-            printf("%c", login[c]);
-        }
+        nextPlace(login,count,place,63);
+        printf("%s\n", login);
         //sleep(1);
-        printf("\n");
     }
 
     return 0;
